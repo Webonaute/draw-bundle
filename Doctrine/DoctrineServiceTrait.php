@@ -18,7 +18,7 @@ trait DoctrineServiceTrait
     {
         $manager = $this->getDoctrine()->getManagerForClass(get_class($entity));
         $manager->persist($entity);
-        $manager->flush($entity);
+        $manager->flush();
         return $entity;
     }
 

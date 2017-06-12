@@ -4,7 +4,7 @@ namespace {{ namespace }}\Controller{% if controllerSubNamespace %}\{{ controlle
 
 {% block use_statements %}
 use {{ entityClass }} as Entity;
-use Draw\DrawBundle\Controller\DoctrineControllerTrait;
+use Draw\DrawBundle\Doctrine\DoctrineServiceContainerAwareTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -17,7 +17,7 @@ class {{ controller }}Controller extends Controller
 {% endblock class_definition %}
 {
 {% block class_body %}
-    use DoctrineControllerTrait;
+    use DoctrineServiceContainerAwareTrait;
 
     /**
      * Create a {{ entityShortName }}

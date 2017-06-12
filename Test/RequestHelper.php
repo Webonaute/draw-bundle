@@ -244,6 +244,28 @@ class RequestHelper
         return $content;
     }
 
+    public function validateJsonAfterFilter($string, $notAllowedKeys = [])
+    {
+        $this->assertions['against'] = function () use ($string, $notAllowedKeys) {
+            $content = $this->filterContent($this->client->getResponse()->getContent());
+            $this->testCase->assertJson($content);
+
+            $json = json_decode($content, true);
+            $json = array_filter($json, function ($key) use ($notAllowedKeys) {
+                //if key is in the array, it should be filtered.
+                return in_array($key, $notAllowedKeys) === false;
+            },ARRAY_FILTER_USE_KEY);
+
+            $content = json_encode($json);
+            $this->testCase->assertJsonStringEqualsJsonString(
+                $string,
+                $content
+            );
+        };
+
+        return $this;
+    }
+
     public function validateAgainstString($string)
     {
         $this->assertions['against'] = function () use ($string) {
@@ -319,31 +341,31 @@ class RequestHelper
     public function maximumSqlQuery($amount, array $filters = [])
     {
         if(!$this->maximumSqlQuery) {
-            $this->addPreRequestCallback(function() {
-                $this->client->getKernel()->boot();
-                $this->client->enableProfiler();
-            });
+//            $this->addPreRequestCallback(function() {
+//                $this->client->getKernel()->boot();
+//                $this->client->enableProfiler();
+//            });
         }
 
         $this->queryFilters = $filters;
         $this->maximumSqlQuery = $amount;
-        $this->asserting(function() {
-            $queries = $this->client->getProfile()->getCollector('db')->getQueries()['default'];
-
-            //We remove the query "COMMIT" and "START TRANSACTION"
-            $queries = array_filter($queries, function($query) {
-                return !is_null($query['types']);
-            });
-
-            //we apply extra custom filters.
-            if (!empty($this->queryFilters)) {
-                foreach ($this->queryFilters as $filter) {
-                    $queries = array_filter($queries, $filter);
-                }
-            }
-
-            $this->testCase->assertLessThanOrEqual($this->maximumSqlQuery, count($queries), json_encode($queries, JSON_PRETTY_PRINT));
-        });
+//        $this->asserting(function() {
+//            $queries = $this->client->getProfile()->getCollector('db')->getQueries()['default'];
+//
+//            //We remove the query "COMMIT" and "START TRANSACTION"
+//            $queries = array_filter($queries, function($query) {
+//                return !is_null($query['types']);
+//            });
+//
+//            //we apply extra custom filters.
+//            if (!empty($this->queryFilters)) {
+//                foreach ($this->queryFilters as $filter) {
+//                    $queries = array_filter($queries, $filter);
+//                }
+//            }
+//
+//            $this->testCase->assertLessThanOrEqual($this->maximumSqlQuery, count($queries), json_encode($queries, JSON_PRETTY_PRINT));
+//        });
 
         return $this;
     }
