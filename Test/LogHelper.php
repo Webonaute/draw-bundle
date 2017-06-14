@@ -2,8 +2,7 @@
 
 namespace Draw\DrawBundle\Test;
 
-use Symfony\Bridge\Monolog\Handler\DebugHandler;
-use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
+use Monolog\Handler\TestHandler;
 
 class LogHelper
 {
@@ -99,13 +98,13 @@ class LogHelper
     }
 
     /**
-     * @return DebugHandler
+     * @return TestHandler
      */
     private function getDebugLogger()
     {
         $handlers = $logs = $this->requestHelper->client->getContainer()->get('logger')->getHandlers();
         foreach ($handlers as $handler) {
-            if ($handler instanceof DebugHandler) {
+            if ($handler instanceof TestHandler) {
                 return $handler;
             }
         }
