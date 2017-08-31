@@ -89,7 +89,12 @@ class DoctrineObjectConstructor implements ObjectConstructorInterface
                 // Extract all UniqueEntity constraints check if all fields required by this constraint are set
                 foreach ($constraints as $index => $constraint) {
                     if ($constraint instanceof UniqueEntity) {
-                        foreach ($constraint->fields as $name) {
+                        if (is_string($constraint->fields)) {
+                            $fields[] = $constraint->fields;
+                        } else {
+                            $fields = $constraint->fields;
+                        }
+                        foreach ($fields as $name) {
                             if (!isset($data[$name])) {
                                 // We don't have some field in provided data to reliably use this constraint
                                 unset($constraints[$index]);
