@@ -13,6 +13,13 @@ services:
     draw.request_deserializer:
         alias: fos_rest.converter.request_body
 
+    jms_serializer.doctrine_object_constructor:
+        class: Draw\DrawBundle\Serializer\Construction\DoctrineObjectConstructor
+        arguments:
+            - '@doctrine'
+            - '@jms_serializer.unserialize_object_constructor'
+            - '@validator'
+
     jms_serializer.object_constructor:
         alias: jms_serializer.doctrine_object_constructor
         public: false

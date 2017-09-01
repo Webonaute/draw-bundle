@@ -21,13 +21,6 @@ class CompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-
-
-        if ($container->hasDefinition('jms_serializer.doctrine_object_constructor')) {
-            $container->getDefinition("jms_serializer.doctrine_object_constructor")
-                ->setClass(DoctrineObjectConstructor::class);
-        }
-
         if ($container->hasDefinition('fos_rest.converter.request_body')) {
             $container->getDefinition('fos_rest.converter.request_body')
                 ->setClass(RequestBodyParamConverter::class);
