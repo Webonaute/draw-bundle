@@ -19,6 +19,7 @@ services:
             - '@doctrine'
             - '@jms_serializer.unserialize_object_constructor'
             - '@validator'
+            - '@annotations.reader'
 
     jms_serializer.object_constructor:
         alias: jms_serializer.doctrine_object_constructor
