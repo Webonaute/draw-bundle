@@ -23,7 +23,8 @@ class CompilerPass implements CompilerPassInterface
     {
         if ($container->hasDefinition('fos_rest.converter.request_body')) {
             $container->getDefinition('fos_rest.converter.request_body')
-                ->setClass(RequestBodyParamConverter::class);
+                ->setClass(RequestBodyParamConverter::class)
+                ->addArgument($container->getDefinition('dms.filter'));
         }
 
         if ($container->hasDefinition('fos_rest.view_response_listener')) {

@@ -2,6 +2,7 @@
 
 namespace Draw\DrawBundle\Request;
 
+use DMS\Bundle\FilterBundle\Service\Filter;
 use Draw\DrawBundle\PropertyAccess\DynamicArrayObject;
 use Draw\DrawBundle\Request\Exception\RequestValidationException;
 use Draw\DrawBundle\Serializer\GroupHierarchy;
@@ -25,18 +26,36 @@ class RequestBodyParamConverter extends BaseRequestBodyParamConverter
     /**
      * @var GroupHierarchy
      */
-    private $groupHierarchy;
+    protected $groupHierarchy;
 
-    private $serializer;
-    private $context = [];
-    private $validator;
+    /**
+     * @var Serializer
+     */
+    protected $serializer;
+
+    /**
+     * @var array
+     */
+    protected $context = [];
+
+    /**
+     * @var ValidatorInterface
+     */
+    protected $validator;
 
     /**
      * The name of the argument on which the ConstraintViolationList will be set.
      *
      * @var null|string
      */
-    private $validationErrorsArgument;
+    protected $validationErrorsArgument;
+
+    /**
+     * The filtering service, which will filter object data before validation
+     *
+     * @var FilterInterface
+     */
+    protected $filterService;
 
     /**
      * @param Serializer $serializer
@@ -44,6 +63,7 @@ class RequestBodyParamConverter extends BaseRequestBodyParamConverter
      * @param string|null $version A version string to be used in the serialization context
      * @param ValidatorInterface $validator
      * @param string|null $validationErrorsArgument
+     * @param FilterInterface $filterService
      *
      * @throws \InvalidArgumentException
      */
@@ -52,7 +72,8 @@ class RequestBodyParamConverter extends BaseRequestBodyParamConverter
         $groups = null,
         $version = null,
         ValidatorInterface $validator = null,
-        $validationErrorsArgument = null
+        $validationErrorsArgument = null,
+        Filter $filterService
     ) {
         $this->serializer = $serializer;
 
@@ -70,6 +91,7 @@ class RequestBodyParamConverter extends BaseRequestBodyParamConverter
 
         $this->validator = $validator;
         $this->validationErrorsArgument = $validationErrorsArgument;
+        $this->filterService = $filterService;
     }
 
 
@@ -146,6 +168,8 @@ class RequestBodyParamConverter extends BaseRequestBodyParamConverter
                 $this->convertValidationErrorsToException($errors);
             }
         }
+
+        $this->filterService->filterEntity($object);
 
         return true;
     }
