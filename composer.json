@@ -11,7 +11,8 @@
     },
     "require": {
         "php": ">=5.3.3|>=7.1",
-        "symfony/framework-bundle": "~2.3|^3.2"
+        "symfony/framework-bundle": "~2.3|^3.2",
+        "dms/dms-filter-bundle": "^2.0|^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "4.1.*|^6.0",
