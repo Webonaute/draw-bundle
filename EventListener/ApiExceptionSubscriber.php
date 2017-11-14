@@ -143,17 +143,12 @@ class ApiExceptionSubscriber implements EventSubscriberInterface, ContainerAware
 
     public function getExceptionDetail(\Exception $e, $full = true)
     {
-        /** @var Request $request */
-        $request = $this->container->get("request_stack")->getCurrentRequest();
         $result = array(
-            'uri' => $request->getUri(),
             'class' => get_class($e),
             'message' => $e->getMessage(),
             'code' => $e->getCode(),
             'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'request' => $request,
-
+            'line' => $e->getLine()
         );
 
         if($full) {
